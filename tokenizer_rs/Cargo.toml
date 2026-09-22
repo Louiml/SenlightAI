@@ -1,0 +1,19 @@
+[package]
+name = "senlight_tokenizer"
+version = "0.1.0"
+edition = "2021"
+description = "Train a Byte-Pair Encoding tokenizer over a source-code corpus for Senlight Coder AI."
+
+[dependencies]
+# Hugging Face's tokenizers library (the Rust backbone powering Python's `tokenizers`).
+tokenizers = "0.21"
+# Idiomatic error handling that lets us bubble up failures with `context()`.
+anyhow = "1.0"
+# JSON pretty-printing of the special token / vocab dumps for verification.
+serde_json = "1.0"
+
+[profile.release]
+# Aggressive optimization for the training hot loop (merger computation).
+lto = true
+codegen-units = 1
+opt-level = 3

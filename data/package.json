@@ -1,0 +1,19 @@
+{
+  "name": "senlight-example-app",
+  "version": "1.0.0",
+  "description": "Example configuration used to train the Senlight Coder AI tokenizer",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.18.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

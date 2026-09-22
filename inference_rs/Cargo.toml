@@ -1,0 +1,32 @@
+[package]
+name = "senlight_inference"
+version = "0.1.0"
+edition = "2021"
+description = "Fast inference engine for Senlight Coder AI (Llama 3.1-style) using Hugging Face Candle."
+
+[dependencies]
+# Candle: minimalist ML framework (tensor + CUDA/CUDA backend).
+candle-core = "0.11.0"
+candle-nn = "0.11.0"
+
+# HF tokenizers (Rust core of the Python `tokenizers` lib) — loads tokenizer.json
+# and provides byte-level encode/decode, exactly matching Phase 1.
+tokenizers = "0.21"
+
+# Error handling + progress/metadata.
+anyhow = "1.0"
+
+# Random number generation for temperature sampling.
+rand = "0.8"
+
+# CPU feature detection for the accelerator backend.
+[features]
+default = ["cuda"]
+
+# CUDA backend flag consumed by candle-core via the CANDLE fused matmul libs.
+cuda = []
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3

@@ -1,0 +1,67 @@
+---
+const primaries = [
+  { main: "Joy", opp: "Sadness", color: "#ffc285" },
+  { main: "Anger", opp: "Fear", color: "#ff6a4d" },
+  { main: "Trust", opp: "Disgust", color: "#a0c3ec" },
+  { main: "Surprise", opp: "Anticipation", color: "#c4b5fd" },
+];
+
+const intensity = ["Annoyance", "Anger", "Rage", "Concern", "Fear", "Terror"];
+---
+
+<section id="plutchik" class="band band--section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Plutchik's Wheel</p>
+      <h2 class="display-md">Discrete wheels, run in parallel.</h2>
+      <p class="body-lg prose-muted" style="margin:0">
+        The VAD space is continuous. Plutchik's wheel is a set of discrete
+        categories, and training runs both at once. Annotators tag each prompt
+        with a category so intent can route to the right persona policy.
+      </p>
+    </header>
+
+    <div class="plutchik-band">
+      <div class="plutchik-inner">
+        <div>
+          <p class="eyebrow">Eight Primaries</p>
+          <h3 class="display-sm" style="margin-bottom: var(--sp-lg)">Joy vs. Sadness, Anger vs. Fear, Trust vs. Disgust, and Surprise vs. Anticipation.</h3>
+          <p class="body-md prose-muted" style="margin-bottom: var(--sp-2xl)">
+            Each primary sits across from its opposite on the wheel. Pairs give
+            you discrete categories to route on, stacked on top of the continuous
+            vector.
+          </p>
+          <div class="intensity-row" role="img" aria-label="Intensity mapping from Annoyance to Rage to Terror">
+            <span class="intensity-chip">Annoyance</span>
+            <span class="intensity-arrow" aria-hidden="true">→</span>
+            <span class="intensity-chip is-hot">Anger</span>
+            <span class="intensity-arrow" aria-hidden="true">→</span>
+            <span class="intensity-chip is-hot">Rage</span>
+            <span class="intensity-arrow" aria-hidden="true">·</span>
+            <span class="intensity-chip">Concern</span>
+            <span class="intensity-arrow" aria-hidden="true">→</span>
+            <span class="intensity-chip">Fear</span>
+            <span class="intensity-arrow" aria-hidden="true">→</span>
+            <span class="intensity-chip is-hot">Terror</span>
+          </div>
+          <p class="body-sm prose-muted" style="margin: var(--sp-lg) 0 0; color: var(--body-mid)">
+            Emotions intensify toward the wheel's core, so the scale doubles as
+            escalation detection. It keeps the model from amplifying user distress.
+          </p>
+        </div>
+
+        <div class="plutchik-grid">
+          {
+            primaries.map((p) => (
+              <article class="plutchik-card">
+                <span class="chip" style={`background: ${p.color}`} aria-hidden="true"></span>
+                <p class="pmain">{p.main}</p>
+                <p class="popp">{p.opp}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,87 @@
+---
+const steps = [
+  {
+    index: "01",
+    phase: "Data",
+    title: "Raw conversational data",
+    desc: "Human conversations come in unlabeled, with no emotion tag on any line.",
+  },
+  {
+    index: "02",
+    phase: "Annotation",
+    title: "Affective annotation",
+    desc: "Annotators tag each interaction with VAD coordinates from −1.0 to 1.0 and a Plutchik category for routing.",
+  },
+  {
+    index: "03",
+    phase: "Baseline",
+    title: "Supervised fine-tuning",
+    desc: "The model is fine-tuned to copy the annotated distribution. This is the empathetic baseline.",
+  },
+  {
+    index: "04",
+    phase: "Reinforcement",
+    title: "Emotional reinforcement learning (RLEF)",
+    desc: "Policy optimization driven by emotional feedback. It rewards empathy and tone over factual correctness.",
+  },
+  {
+    index: "05",
+    phase: "Preference",
+    title: "Human empathy ranking",
+    desc: "Annotators sample new outputs and rank them by empathy and tone, which produces preference data.",
+  },
+  {
+    index: "06",
+    phase: "Reward",
+    title: "Affective reward model",
+    desc: "A learned model scores new outputs against the preference corpus.",
+  },
+  {
+    index: "07",
+    phase: "Optimize",
+    title: "PPO optimization",
+    desc: "Proximal policy optimization raises the expected affective reward of the policy.",
+  },
+  {
+    index: "08",
+    phase: "Latent",
+    title: "Emotional state tracking",
+    desc: "The model keeps a running emotional state across the whole conversation.",
+  },
+  {
+    index: "09",
+    phase: "Deploy",
+    title: "Live sentiment loop",
+    desc: "Live outputs get re-annotated and flow back into the training set, so the loop keeps going.",
+  },
+];
+---
+
+<section id="pipeline" class="band band--section">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Training Pipeline</p>
+      <h2 class="display-md">From raw text to an emotionally-aware model.</h2>
+      <p class="body-lg prose-muted" style="margin:0">
+        Reinforcement Learning from Emotional Feedback (RLEF) takes a raw
+        generator through annotation, fine-tuning, and reward optimization.
+        Each step below is one of those stages.
+      </p>
+    </header>
+
+    <div class="pipeline-list">
+      {
+        steps.map((s) => (
+          <article class="pipeline-step">
+            <span class="step-index">{s.index}</span>
+            <div>
+              <div class="step-phase">{s.phase}</div>
+              <h3 class="step-title">{s.title}</h3>
+            </div>
+            <p class="step-desc">{s.desc}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,359 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+const title = "What is AEI? Artificial Emotional Intelligence in LLMs";
+
+const principle = [
+  {
+    index: "01",
+    name: "Detect",
+    desc: "Read emotion from the words themselves: word choice, punctuation, rhythm, hedging. None of it is hidden.",
+  },
+  {
+    index: "02",
+    name: "Represent",
+    desc: "Keep that state as a numeric vector (Valence, Arousal, Dominance) that survives the whole conversation.",
+  },
+  {
+    index: "03",
+    name: "Respond",
+    desc: "Shape the reply from that state, tuning tone, intensity, and content, instead of replying as if the user felt nothing.",
+  },
+];
+
+const blocks = [
+  {
+    title: "VAD feature space",
+    to: "/#vad-model",
+    desc: "A continuous 3D space. Valence, arousal, and dominance turn feeling into a coordinate the model can train on.",
+  },
+  {
+    title: "RLEF: reinforcement learning from emotional feedback",
+    to: "/#pipeline",
+    desc: "Optimizes the policy for empathy. It rewards responses that validate and de-escalate, not ones that merely answer.",
+  },
+  {
+    title: "Plutchik routing",
+    to: "/#plutchik",
+    desc: "A discrete taxonomy picks the right persona policy for the detected intent, on top of the continuous vector.",
+  },
+];
+
+const notation = [
+  {
+    title: "Not sentience",
+    desc: "AEI is a learned input-output mapping, not subjective experience. It predicts emotion in text; it feels nothing.",
+  },
+  {
+    title: "Not persuasion",
+    desc: "Guardrails have to stop the model from reading a user's state to sell or deceive.",
+  },
+  {
+    title: "Not a substitute",
+    desc: "It supports, triages, and de-escalates. It is a tool for human care, never a replacement for it.",
+  },
+];
+
+const value = [
+  "De-escalation. Cooling a heated exchange before it spirals.",
+  "Safer support. Fitting responses for upset, anxious, or grieving users.",
+  "Better alignment. Rewards that track how humans actually judge responses.",
+  "Persistent rapport. Consistent tone across a long conversation.",
+];
+---
+
+<Layout title={title}>
+  <Nav />
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="top">
+      <div class="container hero-inner">
+        <div class="hero-kicker eyebrow-sm">
+          <span class="dot" aria-hidden="true"></span>
+          GUIDES &middot; INTRO TO AFFECTIVE AI
+        </div>
+
+        <h1 class="display-xl hero-title">
+          What is <span class="serif-em">artificial emotional intelligence</span>?
+        </h1>
+
+        <p class="body-lg prose-muted hero-sub">
+          The point where a language model stops treating words as pure data and
+          starts reacting to how the person behind them feels.
+        </p>
+
+        <dl class="hero-stats">
+          <div class="stat">
+            <dt class="stat-key">Scope</dt>
+            <dd class="stat-value" style="margin: 0">Large language models</dd>
+          </div>
+          <div class="stat">
+            <dt class="stat-key">Core spaces</dt>
+            <dd class="stat-value" style="margin: 0">VAD × Plutchik</dd>
+          </div>
+          <div class="stat">
+            <dt class="stat-key">Training signal</dt>
+            <dd class="stat-value" style="margin: 0">RLEF</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Definition -->
+    <section id="definition" class="band band--section">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">The Idea</p>
+          <h2 class="display-md">A model of how the user is feeling.</h2>
+          <p class="body-lg prose-muted" style="margin: 0">
+            Artificial emotional intelligence (AEI) teaches an LLM to read how the
+            user feels and to let that shape what it says back.
+          </p>
+        </header>
+
+        <div class="aei-gloss">
+          <p class="body-md">
+            A standard language model is optimized to predict the next token. It
+            asks what a reasonable text would say next. It has no account of
+            whether the user is angry, anxious, hopeful, or grieving.
+          </p>
+          <p class="body-md">
+            AEI adds that account. The model learns to infer an emotional state
+            from the user's words, to hold it across turns as a numerical vector,
+            and to generate replies conditioned on that state. Tone and content
+            shift with how the user is feeling.
+          </p>
+          <p class="body-md">
+            That is the difference between a machine reading exactly what you
+            typed and one reading how you felt while you typed it, then adjusting
+            its response for that.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How an LLM does it -->
+    <section id="mechanism" class="band band--section">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Inside the Model</p>
+          <h2 class="display-md">How an LLM carries emotion.</h2>
+          <p class="body-lg prose-muted" style="margin: 0">
+            An LLM has no body and no hormones. Emotion is recovered from text and
+            kept alive across the conversation as a mutable internal state.
+          </p>
+        </header>
+
+        <div class="aei-principle">
+          {principle.map((p) => (
+            <article class="card aei-step">
+              <span class="aei-index">{p.index}</span>
+              <h3 class="display-xs" style="margin: 0 0 var(--sp-xs)">{p.name}</h3>
+              <p class="body-sm prose-muted" style="margin: 0">{p.desc}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Building blocks -->
+    <section id="building-blocks" class="band band--section">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Building Blocks</p>
+          <h2 class="display-md">The machinery behind it.</h2>
+          <p class="body-lg prose-muted" style="margin: 0">
+            AEI is built from the same techniques this site documents. Each is one piece
+            of the overall capability.
+          </p>
+        </header>
+
+        <div class="aei-blocks">
+          {blocks.map((b) => (
+            <a class="card aei-block" href={b.to}>
+              <h3 class="display-xs" style="margin: 0 0 var(--sp-sm)">{b.title}</h3>
+              <p class="body-sm prose-muted" style="margin: 0 0 var(--sp-xl)">{b.desc}</p>
+              <span class="mono aei-block-link">Read about it →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Boundaries -->
+    <section id="boundaries" class="band band--section">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Boundaries</p>
+          <h2 class="display-md">What AEI is not.</h2>
+          <p class="body-lg prose-muted" style="margin: 0">
+            An emotional model is powerful, and it has to be clearly bounded.
+          </p>
+        </header>
+
+        <div class="aei-bounds">
+          {notation.map((b) => (
+            <article class="card aei-bound">
+              <h3 class="display-xs" style="margin: 0 0 var(--sp-xs)">{b.title}</h3>
+              <p class="body-sm prose-muted" style="margin: 0">{b.desc}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Why it matters -->
+    <section id="why" class="band band--section">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Why it matters</p>
+          <h2 class="display-md">Where it earns its place.</h2>
+          <p class="body-lg prose-muted" style="margin: 0">
+            Emotional awareness is not about making the model warmer for its own
+            sake. It makes the interaction measurably safer and more useful.
+          </p>
+        </header>
+
+        <ul class="aei-value">
+          {value.map((v) => (
+            <li class="body-md">{v}</li>
+          ))}
+        </ul>
+
+        <div class="aei-cta">
+          <p class="body-lg prose-muted" style="margin: 0 0 var(--sp-2xl)">
+            The 3D VAD space is live, and the sliders move. Give it a try.
+          </p>
+          <div class="hero-actions" style="margin: 0">
+            <a class="btn" href="/#vad-model">Explore the 3D VAD space</a>
+            <a class="text-link" href="/research">
+              Read the research <span class="text-link-arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .aei-gloss {
+    display: grid;
+    gap: var(--sp-md);
+    max-width: 720px;
+  }
+
+  .aei-gloss p {
+    margin: 0;
+  }
+
+  .aei-principle {
+    display: grid;
+    gap: var(--sp-lg);
+  }
+
+  @media (min-width: 900px) {
+    .aei-principle {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .aei-step {
+    padding: var(--sp-xl);
+  }
+
+  .aei-index {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-bottom: var(--sp-lg);
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--hairline-strong);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: var(--accent-deep);
+  }
+
+  .aei-blocks {
+    display: grid;
+    gap: var(--sp-lg);
+  }
+
+  @media (min-width: 900px) {
+    .aei-blocks {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .aei-block {
+    display: flex;
+    flex-direction: column;
+    padding: var(--sp-xl);
+    transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .aei-block:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+    transform: translateY(-2px);
+  }
+
+  .aei-block-link {
+    color: var(--accent-deep);
+  }
+
+  .aei-bounds {
+    display: grid;
+    gap: var(--sp-lg);
+  }
+
+  @media (min-width: 900px) {
+    .aei-bounds {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .aei-bound {
+    padding: var(--sp-xl);
+  }
+
+  .aei-value {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-md);
+    max-width: 720px;
+  }
+
+  .aei-value li {
+    padding-left: var(--sp-xl);
+    position: relative;
+    color: var(--body);
+  }
+
+  .aei-value li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .aei-cta {
+    margin-top: var(--sp-4xl);
+    padding: var(--sp-2xl);
+    border-top: 1px solid var(--hairline-strong);
+    background: var(--paper);
+  }
+</style>
