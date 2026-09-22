@@ -1,6 +1,6 @@
-# Senlight Coder AI
+# Senlight Psychologist AEI
 
-A small, custom Large Language Model designed to understand and generate code,
+A small, custom Large Language Model designed to understand human emotion and generate psychological responses that fits the situation,
 built from scratch as a Llama-3.1-style decoder-only transformer (Grouped-Query
 Attention, Rotary Position Embeddings, SwiGLU, Pre-RMSNorm).
 
@@ -15,29 +15,13 @@ The stack is deliberately **hybrid**, exactly as specified:
 | Fast inference | **Rust** | HuggingFace `candle` |
 
 ---
-
-## Repository layout
-
+```powershell
+python python/train_continue.py --milestone-tokens 500000000 --max-minutes 300 --save-every 1500 --lr 8e-5 --batch-size 8 --out senlight_500m
 ```
-Senlight/
-├── data/                     # raw source-code corpus (any .py/.rs/.js/...)
-├── artifacts/                # generated: tokenizer.json, data.bin, weights
-│   ├── tokenizer.json
-│   ├── data.bin  (+ .ranges.json)
-│   └── senlight_step*.safetensors
-├── python/
-│   ├── requirements.txt
-│   ├── config.py             # single source of truth for all hyperparameters
-│   ├── dataset.py            # Phase 1b: Dataset / DataLoader / collate
-│   ├── model.py              # Phase 2: RMSNorm, RoPE, SwiGLU, GQA, SenlightCoder
-│   ├── train.py              # Phase 3: training loop + safetensors exporter
-│   └── gui_chat.py           # Bonus: tkinter chat GUI over the Rust engine
-├── tokenizer_rs/             # Phase 1a: Rust BPE tokenizer trainer
-│   └── src/main.rs
-└── inference_rs/             # Phase 4: Candle inference engine
-    └── src/main.rs
+Repeat the same command in later sessions - it auto-resumes and accrues toward the milestone. After each slice, follow with the empathetic SFT on that continued base to get a responsive model:
+```powershell
+python python/train_psy.py --steps 5000 --continue-from senlight_500m --out psy_sft_500m
 ```
-
 ---
 
 ## Model specifications (Llama 3.1-style)
@@ -59,17 +43,11 @@ Senlight/
 | Weight tying           | yes         |
 | **Total parameters**   | **~316M**   |
 
-> Training wins: the 300M model **more than triples** capacity over the original
-> ~100M. It fits the 12 GB RTX 3060 at batch 2–4 (fp16). The **same byte-level
+> Training wins: the 300M model 
 > tokenizer** is retrained on a **bilingual EN+Hebrew corpus**, so it merges
 > Hebrew into whole-word tokens (lossless round-trip). **Hebrew support** is
 > added via `research/hebrew.jsonl` (greetings, feelings, food, holidays,
 > numbers, colors, translation, writing system) baked into the tokenizer corpus.
-
-> Honest note: a 316M model needs *far more* tokens (50M–100M+) than this
-> ~14.5M-token demo corpus to be fully fluent. The retained checkpoints are:
->   * `senlight_300m_he2` — **300M bilingual (EN+HE)** — the default.
->   * `senlight_psy_refined` — the earlier 100M psychological model (reference).
 
 > **Architecture highlights (mirroring `meta-llama/Llama-3.1`):**
 > * **GQA** — 12 query heads share 4 KV heads, shrinking the inference KV cache 3×.
@@ -323,7 +301,7 @@ SENLIGHT_BIN=... SENLIGHT_WEIGHTS=... SENLIGHT_TOKENIZER=... python gui_chat.py
 cd tokenizer_rs && cargo run --release
 cd ../python    && python dataset.py
 
-# 3. Train (RTX 3060, fp16) and export weights.
+# 3. Train  and export weights.
 python train.py --steps 20000 --save-every 5000
 
 # 4. Generate with the Rust engine.
