@@ -1,6 +1,0 @@
-# Python dependencies for Senlight Coder AI (Phase 1b+ data pipeline,
-# Phase 2 model, Phase 3 training).
-torch>=2.5.1          # CUDA build installed separately: pip install torch --index-url https://download.pytorch.org/whl/cu121
-tokenizers>=0.20
-numpy>=1.24
-safetensors>=0.4      # Phase 3 weight export
