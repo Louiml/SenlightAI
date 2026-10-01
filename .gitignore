@@ -40,3 +40,34 @@ Thumbs.db
 
 # ---- large local corpora (raw data checkpoints) ----
 data/**/*.bin
+
+## ---- Varys (72B affective model) ----
+# Merged with the patterns already above rather than replacing them. The rules for
+# artifacts/psy_sft*.jsonl and friends predate this model and still apply: if any of that
+# data is ever restored into this tree, it must not be committable.
+# Build outputs
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Rust
+varys_rs/target/
+
+# Checkpoints and tokenizer artifacts. Geometry always travels with the weights in a
+# config.json sidecar; never commit the weights themselves.
+artifacts/*.safetensors
+artifacts/*.bin
+artifacts/*.pt
+artifacts/step*/
+artifacts/*.index
+
+# Profile stores. These contain conversation-derived material about identifiable people and
+# must never be committed under any circumstances. See varys/profile/consent.py and
+# varys/profile/store.py.
+profiles/
+*.profile.json
+*.profile.jsonl
+
+# Generated reference dumps from the parity harness
+reference.json

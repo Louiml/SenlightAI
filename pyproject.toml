@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "varys"
+version = "0.1.0"
+description = "Senlight Varys: heavy Artificial Emotional Intelligence for psychological analysis"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "louiml" }]
+dependencies = [
+    "torch>=2.5.1",
+    "tokenizers>=0.20",
+    "numpy>=1.24",
+    "safetensors>=0.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[tool.setuptools.packages.find]
+include = ["varys*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# So `pytest` works from the project root without an editable install or a manual
+# PYTHONPATH. `python -m pytest` happens to add the CWD, but bare `pytest` does not,
+# and a suite that only runs for whoever remembered the env var is not a suite.
+pythonpath = ["."]
+filterwarnings = ["ignore::DeprecationWarning"]
