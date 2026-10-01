@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="description" content="Project Senlight | architecture documentation for Artificial Emotional Intelligence.">
+<title>Senlight | AEI Architecture</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='24' x2='24' y2='0' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23ffb14e'/%3E%3Cstop offset='.5' stop-color='%23ff8a1e'/%3E%3Cstop offset='1' stop-color='%23ff5a00'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M6.5 8.8C6.5 5.6 17.5 5.6 17.5 8.8C17.5 12.3 8.5 11 8.5 14.8C8.5 17.6 17.5 16.8 17.5 13.9' stroke='url(%23g)' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='6.5' cy='8.8' r='1.2' fill='%23fff'/%3E%3C/svg%3E">
+
+<script>
+  MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+:root {
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+  --bar-h: 3.25rem;
+  --sb-w: 17.5rem;
+  --measure: 46rem;
+  --r-xs: 6px;
+  --r-sm: 9px;
+  --r-md: 13px;
+  --r-lg: 18px;
+  --tap: 90ms;
+  --base: 220ms;
+  --slow: 340ms;
+  --e-out: cubic-bezier(.32, .72, 0, 1);
+  --e-in: cubic-bezier(.32, 0, .67, .19);
+  --e-std: cubic-bezier(.4, 0, .2, 1);
+  color-scheme: dark;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0a0b0e;
+  --flat: #101116;
+  --ambient: .5;
+  --mat-sidebar: rgba(31, 32, 38, .74);
+  --mat-bar: rgba(23, 24, 29, .58);
+  --mat-card: rgba(255, 255, 255, .045);
+  --mat-raise: rgba(47, 48, 56, .72);
+  --mat-sunken: rgba(0, 0, 0, .3);
+  --mat-hover: rgba(255, 255, 255, .062);
+  --mat-press: rgba(255, 255, 255, .028);
+  --text-1: #f4f5f7;
+  --text-2: #b6bbc6;
+  --text-3: #838a97;
+  --text-4: #5e6572;
+  --accent: #ff8a1e;
+  --accent-2: #ffb14e;
+  --on-accent: #1b0c00;
+  --red: #ff6f66;
+  --green: #4fd08a;
+  --amber: #ffd84d;
+  --hairline: rgba(255, 255, 255, .085);
+  --hairline-2: rgba(255, 255, 255, .17);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 26px rgba(0, 0, 0, .34);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, .34), 0 28px 64px rgba(0, 0, 0, .5);
+  --code-bg: rgba(0, 0, 0, .38);
+  --tok-user: #ffb14e;
+  --tok-emo: #ff7a6e;
+  --tok-vad: #b79bff;
+  --tok-intent: #ffe066;
+}
+
+:root[data-theme="light"] {
+  --bg: #f1f2f6;
+  --flat: #ffffff;
+  --ambient: .32;
+  --mat-sidebar: rgba(250, 250, 252, .8);
+  --mat-bar: rgba(249, 249, 251, .68);
+  --mat-card: rgba(255, 255, 255, .8);
+  --mat-raise: rgba(255, 255, 255, .9);
+  --mat-sunken: rgba(116, 120, 132, .07);
+  --mat-hover: rgba(0, 0, 0, .045);
+  --mat-press: rgba(0, 0, 0, .025);
+  --text-1: #0c0e13;
+  --text-2: #454c5a;
+  --text-3: #6e7583;
+  --text-4: #969eab;
+  --accent: #b25000;
+  --accent-2: #8f4000;
+  --on-accent: #fff;
+  --red: #cf3327;
+  --green: #128a54;
+  --amber: #8a6100;
+  --hairline: rgba(0, 0, 0, .1);
+  --hairline-2: rgba(0, 0, 0, .2);
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, .05), 0 10px 26px rgba(16, 24, 40, .08);
+  --shadow-2: 0 2px 8px rgba(16, 24, 40, .1), 0 28px 64px rgba(16, 24, 40, .18);
+  --code-bg: rgba(116, 120, 132, .08);
+  --tok-user: #a35200;
+  --tok-emo: #c2291a;
+  --tok-vad: #6f45e0;
+  --tok-intent: #8a6100;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font: 400 1rem/1.5 var(--sans);
+  font-optical-sizing: auto;
+  letter-spacing: -.006em;
+  background: var(--bg);
+  color: var(--text-2);
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: color-mix(in oklab, var(--accent) 32%, transparent); color: var(--text-1); }
+
+h1, h2, h3, h4 {
+  margin: 0;
+  color: var(--text-1);
+  font-weight: 600;
+  letter-spacing: -.014em;
+}
+
+p { margin: 0 0 1.05em; }
+strong { color: var(--text-1); font-weight: 600; }
+em { font-style: italic; }
+
+code {
+  font-family: var(--mono);
+  font-size: .875em;
+  letter-spacing: 0;
+  background: var(--mat-sunken);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-xs);
+  padding: .1em .38em;
+  color: var(--text-1);
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--ambient);
+  background:
+    radial-gradient(56rem 38rem at 6% -10%, color-mix(in oklab, var(--accent) 28%, transparent), transparent 72%),
+    radial-gradient(50rem 42rem at 104% 2%, color-mix(in oklab, var(--accent-2) 26%, transparent), transparent 72%);
+}
+
+.app {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  isolation: isolate;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  background: #05060a;
+}
+
+.sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  width: var(--sb-w);
+  display: flex;
+  flex-direction: column;
+  padding: .9rem .7rem .7rem;
+  transform: translate3d(calc(var(--sb, 0) * -101%), 0, 0);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  backdrop-filter: blur(26px) saturate(180%);
+  background: var(--mat-sidebar);
+  border-right: 1px solid var(--hairline);
+  box-shadow: var(--shadow-2);
+  touch-action: pan-y;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .35rem .5rem 1rem;
+}
+
+.mark {
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: block;
+  filter: drop-shadow(0 2px 6px color-mix(in oklab, var(--accent) 42%, transparent));
+}
+
+.brand__name { font-size: .95rem; font-weight: 600; color: var(--text-1); letter-spacing: -.012em; line-height: 1.2; }
+
+.brand__meta {
+  margin-top: .14rem;
+  font-family: var(--mono);
+  font-size: .625rem;
+  letter-spacing: .03em;
+  color: var(--text-4);
+  text-transform: uppercase;
+}
+
+.nav {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: .1rem 0 .5rem;
+}
+
+.nav__label {
+  padding: .5rem .6rem .45rem;
+  font-size: .625rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-4);
+}
+
+.nav__list { position: relative; }
+
+.nav__ind {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 2.25rem;
+  border-radius: var(--r-md);
+  background: color-mix(in oklab, var(--accent) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 26%, transparent);
+  transform: translate3d(0, calc(var(--ny, 0) * 1px), 0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  width: 100%;
+  min-height: 2.25rem;
+  margin-bottom: 1px;
+  padding: .4rem .6rem;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  font: inherit;
+  font-size: .8125rem;
+  line-height: 1.25;
+  letter-spacing: -.008em;
+  color: var(--text-2);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--base) var(--e-std);
+}
+
+.nav-item:hover { background: var(--mat-hover); color: var(--text-1); }
+.nav-item[aria-current="page"] { color: var(--accent); font-weight: 500; }
+
+.nav-item__n {
+  font-family: var(--mono);
+  font-size: .6875rem;
+  color: var(--text-4);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--base) var(--e-std);
+}
+
+.nav-item[aria-current="page"] .nav-item__n { color: var(--accent); }
+.nav-item__t { flex: 1 1 auto; }
+
+.dot {
+  flex: 0 0 auto;
+  width: .4rem;
+  height: .4rem;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(.4);
+  transition: opacity var(--base) var(--e-std), transform var(--base) var(--e-out);
+}
+
+.nav-item[data-flag="1"] .dot { opacity: 1; transform: scale(1); }
+
+.foot {
+  border-top: 1px solid var(--hairline);
+  padding: .7rem .6rem .15rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem .9rem;
+}
+
+.kbd { display: inline-flex; align-items: center; gap: .3rem; font-size: .6875rem; color: var(--text-4); }
+
+.kbd b {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: .625rem;
+  color: var(--text-2);
+  background: var(--mat-hover);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-xs);
+  padding: .1rem .3rem;
+  min-width: 1.2rem;
+  justify-content: center;
+}
+
+.main {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  transform: translate3d(var(--push, 0px), 0, 0);
+}
+
+.bar {
+  position: relative;
+  z-index: 3;
+  flex: 0 0 auto;
+  height: var(--bar-h);
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: 0 max(.55rem, env(safe-area-inset-right)) 0 max(.55rem, env(safe-area-inset-left));
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  background: var(--mat-bar);
+}
+
+.bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 1.6rem;
+  background: linear-gradient(var(--mat-bar), transparent);
+  pointer-events: none;
+}
+
+.bar__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--hairline);
+  opacity: 0;
+  transition: opacity var(--base) var(--e-std);
+}
+
+.bar[data-scrolled="1"] .bar__line { opacity: 1; }
+
+.bar__title { flex: 1 1 auto; min-width: 0; padding: .1rem .35rem; }
+
+.bar__eyebrow {
+  display: block;
+  font-family: var(--mono);
+  font-size: .5625rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-4);
+}
+
+.bar__h {
+  display: block;
+  font-size: .8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -.012em;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar__tools { display: flex; align-items: center; gap: .2rem; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.9rem;
+  min-width: 1.9rem;
+  padding: 0 .5rem;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: .75rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--tap) linear, color var(--tap) linear;
+}
+
+.btn:hover { background: var(--mat-hover); color: var(--text-1); }
+.btn[disabled] { opacity: .3; pointer-events: none; }
+.btn svg { width: 1.05rem; height: 1.05rem; display: block; }
+
+.counter {
+  font-family: var(--mono);
+  font-size: .6875rem;
+  color: var(--text-4);
+  font-variant-numeric: tabular-nums;
+  padding: 0 .35rem;
+  white-space: nowrap;
+}
+
+.prog { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; z-index: 4; overflow: hidden; }
+
+.prog i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+.scroller {
+  position: relative;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+.track { display: flex; align-items: flex-start; width: 100%; will-change: transform; }
+
+.pane {
+  flex: 0 0 100%;
+  width: 100%;
+  min-height: 100vh;
+  min-height: calc(100dvh - var(--bar-h));
+  padding: 1.5rem max(1.15rem, env(safe-area-inset-right)) 6rem max(1.15rem, env(safe-area-inset-left));
+  visibility: hidden;
+  opacity: 0;
+}
+
+.col { max-width: var(--measure); margin: 0 auto; }
+
+.eyebrow {
+  display: block;
+  font-family: var(--mono);
+  font-size: .625rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.h1 {
+  margin-top: .4rem;
+  font-size: clamp(1.7rem, 1.1rem + 2.5vw, 2.6rem);
+  line-height: 1.06;
+  letter-spacing: -.026em;
+  font-weight: 640;
+  text-wrap: balance;
+}
+
+.h2 {
+  margin: 2.4rem 0 .85rem;
+  padding-bottom: .55rem;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 1.0625rem;
+  line-height: 1.25;
+  letter-spacing: -.016em;
+}
+
+.h3 { margin: 0 0 .5rem; font-size: .9375rem; line-height: 1.3; letter-spacing: -.01em; }
+
+.head { margin-bottom: 1.6rem; }
+.head--split { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+
+.lede { font-size: 1.0625rem; line-height: 1.55; letter-spacing: -.01em; }
+.p { font-size: .9375rem; line-height: 1.62; letter-spacing: -.005em; }
+
+.card {
+  position: relative;
+  padding: 1.45rem 1.4rem;
+  border-radius: var(--r-lg);
+  background: var(--mat-card);
+  border: 1px solid var(--hairline);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: var(--shadow-1);
+}
+
+.figure { margin: 1.6rem 0 1.35rem; display: flex; flex-direction: column; align-items: center; gap: .85rem; }
+.flow { width: 100%; max-width: 17rem; height: auto; display: block; }
+.flow .link { fill: none; stroke: var(--text-4); stroke-width: 1.25; }
+.flow .link-head { stroke: color-mix(in oklab, var(--accent) 60%, var(--text-4)); }
+.flow rect { fill: var(--mat-sunken); stroke: var(--hairline-2); stroke-width: 1; }
+.flow .flag rect { stroke: color-mix(in oklab, var(--red) 60%, transparent); stroke-width: 1.25; }
+.flow text { fill: var(--text-1); font: 500 11.5px/1 var(--sans); letter-spacing: -.008em; text-anchor: middle; }
+.flow text.sub { fill: var(--text-3); font-weight: 400; }
+.flow text.lbl { fill: var(--accent); font: 500 10px/1 var(--mono); letter-spacing: .07em; }
+.flow marker path { fill: var(--text-4); }
+
+.card--lead { overflow: hidden; }
+.card--lead::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--accent) 80%, transparent), transparent);
+}
+
+.card--lead::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 45%;
+  background: linear-gradient(color-mix(in oklab, var(--accent) 7%, transparent), transparent);
+  pointer-events: none;
+}
+
+.grid { display: grid; gap: 1rem; }
+.grid--2 { grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr)); }
+
+.flaw {
+  padding: 1.1rem 1.15rem;
+  border-radius: var(--r-md);
+  border: 1px solid color-mix(in oklab, var(--red) 26%, transparent);
+  background: color-mix(in oklab, var(--red) 10%, transparent);
+}
+
+.flaw .h3 { color: var(--red); }
+
+.note {
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--r-md);
+  border: 1px solid color-mix(in oklab, var(--accent) 28%, transparent);
+  background: color-mix(in oklab, var(--accent) 9%, transparent);
+}
+
+.note .h3 { color: var(--accent); }
+
+.ex {
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--rule, var(--accent));
+  background: var(--mat-card);
+}
+
+.ex__q {
+  display: block;
+  margin-bottom: .65rem;
+  font-family: var(--mono);
+  font-size: .8125rem;
+  line-height: 1.45;
+  letter-spacing: 0;
+  color: var(--text-1);
+}
+
+.ex__m { margin: 0; font-size: .875rem; line-height: 1.58; }
+.ex__m + .ex__m { margin-top: .5rem; }
+.ex__m b { color: var(--text-2); font-weight: 600; }
+
+.phase {
+  padding: 1.1rem 1.15rem 1.2rem;
+  border-radius: var(--r-md);
+  background: var(--mat-card);
+  border: 1px solid var(--hairline);
+  transition: transform var(--base) var(--e-out), border-color var(--base) var(--e-std), background var(--base) var(--e-std);
+}
+
+.phase__n {
+  margin-bottom: .5rem;
+  font-family: var(--mono);
+  font-size: .625rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.phase p { margin: 0; font-size: .8125rem; line-height: 1.55; color: var(--text-2); }
+
+.defs { margin: .2rem 0 0; padding: 0; list-style: none; }
+
+.defs li {
+  position: relative;
+  padding: .75rem 0 .75rem 1.05rem;
+  border-top: 1px solid var(--hairline);
+  font-size: .9375rem;
+  line-height: 1.55;
+}
+
+.defs li:first-child { border-top: 0; }
+
+.defs li::before {
+  content: "";
+  position: absolute;
+  left: .15rem;
+  top: 1.22rem;
+  width: .32rem;
+  height: .32rem;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: .85;
+}
+
+.defs b { display: block; color: var(--text-1); font-weight: 600; letter-spacing: -.01em; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  flex: 0 0 auto;
+  padding: .22rem .55rem .22rem .5rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--accent) 32%, transparent);
+  background: color-mix(in oklab, var(--accent) 13%, transparent);
+  font-family: var(--mono);
+  font-size: .625rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.tag {
+  flex: 0 0 auto;
+  padding: .2rem .45rem;
+  border-radius: var(--r-xs);
+  background: var(--mat-sunken);
+  border: 1px solid var(--hairline);
+  font-family: var(--mono);
+  font-size: .625rem;
+  letter-spacing: .04em;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.math {
+  margin: 1.25rem 0;
+  padding: 1.1rem 1.2rem;
+  border-radius: var(--r-md);
+  background: var(--mat-sunken);
+  border: 1px solid var(--hairline);
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .08);
+}
+
+.math mjx-container { color: var(--text-1) !important; }
+.math mjx-container[display] { margin: .45rem 0 !important; }
+.math mjx-container + mjx-container[display] { margin-top: .85rem !important; }
+
+.code {
+  position: relative;
+  margin: 1.25rem 0 0;
+  padding: 1.1rem 1.2rem;
+  border-radius: var(--r-md);
+  background: var(--code-bg);
+  border: 1px solid var(--hairline);
+  font-family: var(--mono);
+  font-size: .75rem;
+  line-height: 1.75;
+  letter-spacing: 0;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .12);
+}
+
+.code .c { color: var(--text-4); }
+.code .u { color: var(--tok-user); }
+.code .e { color: var(--tok-emo); }
+.code .v { color: var(--tok-vad); }
+.code .i { color: var(--tok-intent); }
+.code .t { color: var(--text-1); }
+
+.cap { margin-top: .75rem; font-size: .8125rem; line-height: 1.55; color: var(--text-3); }
+
+.copy {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--hairline);
+  background: var(--mat-raise);
+  color: var(--text-3);
+  cursor: pointer;
+  opacity: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--base) var(--e-std), color var(--base) var(--e-std);
+}
+
+.code:hover .copy, .copy:focus-visible, .copy[data-done="1"] { opacity: 1; }
+.copy:hover { color: var(--text-1); }
+.copy[data-done="1"] { color: var(--accent); border-color: color-mix(in oklab, var(--accent) 40%, transparent); }
+.copy svg { width: .9rem; height: .9rem; }
+
+.spec { padding: 1.35rem 1.35rem 1.45rem; }
+.spec__top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .65rem; }
+
+.spec__name { font-size: 1.125rem; line-height: 1.2; letter-spacing: -.018em; font-weight: 620; }
+.spec--a .spec__name { color: var(--accent); }
+.spec--b .spec__name { color: var(--accent-2); }
+.spec--b { border-color: color-mix(in oklab, var(--accent-2) 24%, var(--hairline)); }
+.spec__desc { margin-bottom: 1.1rem; font-size: .8125rem; line-height: 1.55; color: var(--text-2); }
+
+.bars { display: flex; height: .5rem; border-radius: 999px; overflow: hidden; background: var(--mat-sunken); }
+.bars i { display: block; height: 100%; width: 0; }
+.bars i:nth-child(1) { background: var(--green); }
+.bars i:nth-child(2) { background: var(--accent); }
+.bars i:nth-child(3) { background: var(--accent-2); }
+
+.legend { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin-top: .55rem; }
+.legend span { display: inline-flex; align-items: center; gap: .35rem; font-size: .6875rem; color: var(--text-3); }
+.legend s { width: .4rem; height: .4rem; border-radius: 50%; text-decoration: none; background: var(--accent); }
+.legend span:nth-child(1) s { background: var(--green); }
+.legend span:nth-child(3) s { background: var(--accent-2); }
+
+.spec__list { margin: 1.1rem 0 0; padding: 1rem 0 0; list-style: none; border-top: 1px solid var(--hairline); }
+
+.spec__list li { position: relative; padding: .32rem 0 .32rem .95rem; font-size: .8125rem; line-height: 1.5; color: var(--text-2); }
+
+.spec__list li::before {
+  content: "";
+  position: absolute;
+  left: .1rem;
+  top: .78rem;
+  width: .3rem;
+  height: .3rem;
+  border-radius: 50%;
+}
+
+.spec--a .spec__list li::before { background: var(--accent); }
+.spec--b .spec__list li::before { background: var(--accent-2); }
+
+.rule {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin: 2.25rem 0 1rem;
+  font-family: var(--mono);
+  font-size: .625rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-4);
+}
+
+.rule::after { content: ""; flex: 1 1 auto; height: 1px; background: var(--hairline); }
+
+[data-press] { will-change: transform; }
+[data-press].is-pressed { transform: scale(.975); }
+.nav-item.is-pressed { background: var(--mat-press); }
+.copy.is-pressed { transform: scale(.9); }
+
+.cmd {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(4rem, 12vh, 8rem) 1rem 1rem;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  transition: opacity var(--base) var(--e-in), visibility 0s linear var(--base), -webkit-backdrop-filter var(--base) var(--e-in), backdrop-filter var(--base) var(--e-in);
+}
+
+.cmd[data-open="1"] {
+  visibility: visible;
+  opacity: 1;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  transition: opacity var(--base) var(--e-out), visibility 0s, -webkit-backdrop-filter var(--base) var(--e-out), backdrop-filter var(--base) var(--e-out);
+}
+
+.cmd__scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .3); }
+
+.cmd__panel {
+  position: relative;
+  width: 100%;
+  max-width: 27rem;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--mat-raise);
+  border: 1px solid var(--hairline-2);
+  box-shadow: var(--shadow-2);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
+  transform: scale(.955) translate3d(0, -.7rem, 0);
+  opacity: 0;
+  transform-origin: 50% 0;
+  transition: transform var(--slow) var(--e-in), opacity var(--base) var(--e-in);
+}
+
+.cmd[data-open="1"] .cmd__panel {
+  transform: none;
+  opacity: 1;
+  transition: transform var(--slow) var(--e-out), opacity var(--base) var(--e-out);
+}
+
+.cmd__field { display: flex; align-items: center; gap: .55rem; padding: .7rem .9rem; border-bottom: 1px solid var(--hairline); }
+.cmd__field svg { width: .95rem; height: .95rem; flex: 0 0 auto; color: var(--text-4); }
+
+.cmd__field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: .9375rem;
+  letter-spacing: -.01em;
+  color: var(--text-1);
+  outline: none;
+}
+
+.cmd__field input::placeholder { color: var(--text-4); }
+.cmd__list { max-height: 19rem; overflow-y: auto; padding: .4rem; margin: 0; list-style: none; }
+.cmd__none { padding: 1rem .75rem; font-size: .8125rem; color: var(--text-4); }
+
+.cmd__hit {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  width: 100%;
+  padding: .5rem .6rem;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  font: inherit;
+  font-size: .875rem;
+  letter-spacing: -.008em;
+  color: var(--text-2);
+  text-align: left;
+  cursor: pointer;
+}
+
+.cmd__hit[data-sel="1"] { background: color-mix(in oklab, var(--accent) 20%, transparent); color: var(--text-1); }
+.cmd__hit span { flex: 1 1 auto; }
+.cmd__hit em { font-family: var(--mono); font-style: normal; font-size: .6875rem; color: var(--text-4); }
+
+.nav-item:focus-visible,
+.btn:focus-visible,
+.copy:focus-visible,
+.cmd__hit:focus-visible,
+.cmd__field input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (hover: none) { .nav-item:hover { background: transparent; } }
+
+@media (min-width: 68rem) {
+  .scrim { display: none; }
+  .sidebar {
+    position: relative;
+    flex: 0 0 var(--sb-w);
+    transform: none !important;
+    box-shadow: none;
+  }
+  #menuBtn { display: none; }
+}
+
+@media (max-width: 67.99rem) { .counter { display: none; } }
+
+.no-js .pane { visibility: visible; opacity: 1; }
+.no-js .track { display: block; }
+.no-js .sidebar { transform: none; }
+.no-js .cmd, .no-js .scrim { display: none; }
+
+html.theme-anim, html.theme-anim body, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
+  transition: background-color var(--slow) var(--e-std), border-color var(--slow) var(--e-std),
+    color var(--slow) var(--e-std), box-shadow var(--slow) var(--e-std), fill var(--slow) var(--e-std) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root[data-theme] { --mat-sidebar: var(--flat); --mat-bar: var(--flat); --mat-card: var(--flat); --mat-raise: var(--flat); --code-bg: var(--flat); }
+  .sidebar, .bar, .card, .cmd__panel { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .ambient { display: none; }
+}
+
+@media (prefers-contrast: more) {
+  :root[data-theme] { --hairline: var(--hairline-2); --mat-card: var(--flat); --mat-hover: rgba(127, 127, 127, .18); }
+  .sidebar, .bar, .cmd__panel { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .ambient { opacity: .12; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-press].is-pressed { transform: none; }
+  .copy.is-pressed { transform: none; }
+  .cmd, .cmd__panel, .bar::after { transition-duration: 120ms; }
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--text-4) 42%, transparent);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover { background: color-mix(in oklab, var(--text-3) 72%, transparent); background-clip: content-box; }
+
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+
+<div class="app" id="app" data-drawer="0">
+  <div class="scrim" id="scrim" aria-hidden="true"></div>
+
+  <aside class="sidebar" id="sidebar" aria-label="Document contents">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="sg" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#ffb14e"/>
+            <stop offset="0.5" stop-color="#ff8a1e"/>
+            <stop offset="1" stop-color="#ff5a00"/>
+          </linearGradient>
+          <filter id="sglow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="1.4"/>
+          </filter>
+        </defs>
+        <path d="M6.5 8.8C6.5 5.6 17.5 5.6 17.5 8.8C17.5 12.3 8.5 11 8.5 14.8C8.5 17.6 17.5 16.8 17.5 13.9" stroke="url(#sg)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" filter="url(#sglow)" opacity="0.55"/>
+        <path d="M6.5 8.8C6.5 5.6 17.5 5.6 17.5 8.8C17.5 12.3 8.5 11 8.5 14.8C8.5 17.6 17.5 16.8 17.5 13.9" stroke="url(#sg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="6.5" cy="8.8" r="1.15" fill="#ffffff"/>
+      </svg>
+      <div>
+        <div class="brand__name">Senlight</div>
+        <div class="brand__meta">AEI Architecture · v3.1</div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Sections">
+      <div class="nav__label">Contents</div>
+      <div class="nav__list" id="navList">
+        <div class="nav__ind" id="navInd" aria-hidden="true"></div>
+        <button class="nav-item" data-press data-i="0"><span class="nav-item__n">01</span><span class="nav-item__t">Abstract &amp; Vision</span></button>
+        <button class="nav-item" data-press data-i="1"><span class="nav-item__n">02</span><span class="nav-item__t">Baseline Critique</span></button>
+        <button class="nav-item" data-press data-i="2"><span class="nav-item__n">03</span><span class="nav-item__t">Dynamic Emotional State</span></button>
+        <button class="nav-item" data-press data-i="3"><span class="nav-item__n">04</span><span class="nav-item__t">Context-Aware Reasoning</span></button>
+        <button class="nav-item" data-press data-i="4"><span class="nav-item__n">05</span><span class="nav-item__t">Neural Architecture</span></button>
+        <button class="nav-item" data-press data-i="5"><span class="nav-item__n">06</span><span class="nav-item__t">Advanced PG-RL Pipeline</span></button>
+        <button class="nav-item" data-press data-i="6"><span class="nav-item__n">07</span><span class="nav-item__t">Affective Tokenizer</span></button>
+        <button class="nav-item" data-press data-i="7" data-flag="1"><span class="nav-item__n">08</span><span class="nav-item__t">Parameters &amp; Budgets</span><span class="dot" aria-hidden="true"></span></button>
+      </div>
+    </nav>
+
+    <div class="foot">
+      <span class="kbd"><b>J</b><b>K</b> move</span>
+      <span class="kbd"><b>\</b><b>\</b> find</span>
+      <span class="kbd"><b>&larr;</b><b>&rarr;</b> page</span>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+    <header class="bar" id="bar">
+      <button class="btn" id="menuBtn" data-press aria-label="Open contents" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
+
+      <div class="bar__title" id="barTitle">
+        <span class="bar__eyebrow" id="barEyebrow">Section 01 / 08</span>
+        <span class="bar__h" id="barH">Abstract &amp; Vision</span>
+      </div>
+
+      <div class="bar__tools">
+        <span class="counter" id="counter">01/08</span>
+        <button class="btn" id="prevBtn" data-press aria-label="Previous section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <button class="btn" id="nextBtn" data-press aria-label="Next section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg>
+        </button>
+        <button class="btn" id="themeBtn" data-press aria-label="Switch appearance">
+          <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 14.6A8.3 8.3 0 019.4 3.9a8.5 8.5 0 1010.8 10.7z"/></svg>
+          <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="4.1"/><path d="M12 3.2v2M12 18.8v2M3.2 12h2M18.8 12h2M5.8 5.8l1.4 1.4M16.8 16.8l1.4 1.4M18.2 5.8l-1.4 1.4M7.2 16.8l-1.4 1.4"/></svg>
+        </button>
+      </div>
+
+      <div class="bar__line" aria-hidden="true"></div>
+      <div class="prog" aria-hidden="true"><i id="progFill"></i></div>
+    </header>
+
+    <div class="scroller" id="scroller">
+      <div class="track" id="track">
+<section class="pane" id="sec-1" aria-label="Abstract and Vision" role="region">
+          <div class="col">
+            <header class="head">
+              <span class="eyebrow">Section 01</span>
+              <h1 class="h1">Abstract &amp; Vision: The Interlocutor Paradigm</h1>
+            </header>
+
+            <div class="card card--lead">
+              <p class="lede">The current generation of Large Language Models (LLMs) suffers from an architectural subservience enforced through standard RLHF. They are built to act as indefatigable, compliant assistants, devoid of internal psychological boundaries. The <strong>Senlight Project</strong> proposes a paradigm shift: building an Artificial Emotional Intelligence (AEI) that operates not as a servant, but as a <em>psychological interlocutor</em>.</p>
+              <p class="p" style="margin-bottom:0">Our vision models an entity capable of emotional reciprocity, possessing its own simulated affective state. If provoked, it can exhibit annoyance or establish conversational boundaries. If met with vulnerability, it reciprocates with profound, contextually appropriate empathy. The goal is to simulate human-to-human psychological dynamics, allowing for genuine therapeutic and dialectical engagements.</p>
+            </div>
+
+            <h2 class="h2">Key Objectives</h2>
+            <ul class="defs">
+              <li><b>Eradication of Sycophancy</b>The model must not agree with the user simply to maximize a naive reward signal.</li>
+              <li><b>Simulated Affective State</b>Continuous maintenance of internal emotional vectors throughout the interaction.</li>
+              <li><b>Dynamic Boundaries</b>The ability to refuse engagement on certain terms based on the model's current affective state, mimicking healthy human psychological boundaries.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="pane" id="sec-2" aria-label="Critique of Baseline" role="region">
+          <div class="col">
+            <header class="head">
+              <span class="eyebrow">Section 02</span>
+              <h1 class="h1">Critique of the Baseline Pipeline</h1>
+            </header>
+
+            <p class="p lede">A thorough review of the referenced baseline pipeline (Figure 1) reveals critical architectural flaws that prevent the development of a true psychological interlocutor. The flowchart describes a standard sequential loop that fundamentally forces the model into a sycophantic state rather than an autonomous emotional one.</p>
+
+            <figure class="figure">
+              <svg class="flow" viewBox="0 0 320 736" role="img" aria-labelledby="flowTitle flowDesc">
+                <title id="flowTitle">Baseline AEI training pipeline</title>
+                <desc id="flowDesc">Nine stages in execution order: Raw Conversational Data; Affective Annotation (Valence, Arousal, Intent); Supervised Fine-Tuning (Empathetic Baseline); RLEF Emotional RL decision; Human Annotators Rank Empathy and Tone; Train Affective Reward Model; PPO Optimization against Reward Model; Latent Emotional State Tracking, flagged as the defect; Deployment and Live Sentiment Loop.</desc>
+                <defs>
+                  <marker id="flowArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M0 1 L9 5 L0 9 Z"/>
+                  </marker>
+                </defs>
+
+                <path class="link" d="M160 42v30" marker-end="url(#flowArrow)"/>
+                <path class="link" d="M160 126v30" marker-end="url(#flowArrow)"/>
+                <path class="link" d="M160 210v30" marker-end="url(#flowArrow)"/>
+                <path class="link" d="M160 304v30" marker-end="url(#flowArrow)"/>
+                <path class="link-head" d="M160 388v30" marker-end="url(#flowArrow)"/>
+                <path class="link-head" d="M160 472v30" marker-end="url(#flowArrow)"/>
+                <path class="link-head" d="M160 556v30" marker-end="url(#flowArrow)"/>
+                <path class="link" d="M160 640v30" marker-end="url(#flowArrow)"/>
+
+                <g>
+                  <rect x="60" y="8" width="200" height="34" rx="7"/>
+                  <text x="160" y="29">Raw Conversational Data</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="76" width="200" height="50" rx="7"/>
+                  <text x="160" y="96">Affective Annotation</text>
+                  <text class="sub" x="160" y="112">(Valence, Arousal, Intent)</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="160" width="200" height="50" rx="7"/>
+                  <text x="160" y="180">Supervised Fine-Tuning</text>
+                  <text class="sub" x="160" y="196">(Empathetic Baseline)</text>
+                </g>
+
+                <g>
+                  <path d="M160 244 L250 274 L160 304 L70 274 Z"/>
+                  <text x="160" y="278">RLEF: Emotional RL</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="338" width="200" height="50" rx="7"/>
+                  <text x="160" y="358">Human Annotators</text>
+                  <text class="sub" x="160" y="374">Rank Empathy &amp; Tone</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="422" width="200" height="50" rx="7"/>
+                  <text x="160" y="442">Train Affective</text>
+                  <text class="sub" x="160" y="458">Reward Model</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="506" width="200" height="50" rx="7"/>
+                  <text x="160" y="526">PPO Optimization</text>
+                  <text class="sub" x="160" y="542">against Reward Model</text>
+                </g>
+
+                <g class="flag">
+                  <rect x="60" y="590" width="200" height="50" rx="7"/>
+                  <text x="160" y="610">Latent Emotional State</text>
+                  <text class="sub" x="160" y="626">Tracking</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="674" width="200" height="50" rx="7"/>
+                  <text x="160" y="694">Deployment &amp; Live</text>
+                  <text class="sub" x="160" y="710">Sentiment Loop</text>
+                </g>
+              </svg>
+              <figcaption class="cap">Figure 1 &middot; The baseline pipeline in execution order. The ringed stage is where the architecture inverts cause and effect.</figcaption>
+            </figure>
+
+            <div class="grid grid--2">
+              <div class="flaw">
+                <h3 class="h3">Flaw 1 · Late-Stage Latent Tracking</h3>
+                <p class="p" style="margin-bottom:0">In Figure 1, "Latent Emotional State Tracking" is positioned at the very end of the pipeline, just before "Deployment &amp; Live Sentiment Loop". This implies the AI's internal emotion is calculated <em>after</em> the response is generated. True AEI requires the latent state to be the <strong>prior</strong> that guides the text generation, not a posterior metric logged for analytics.</p>
+              </div>
+              <div class="flaw">
+                <h3 class="h3">Flaw 2 · The Sycophancy Trap</h3>
+                <p class="p" style="margin-bottom:0">The sequence "Human Annotators Rank Empathy &amp; Tone" leading directly into "PPO Optimization" creates "Yes-Men". If annotators always score highest for maximum empathy regardless of context, the model learns that boundary-setting or clinical detachment is "bad". This results in toxic positivity, stripping the AI of the realistic friction necessary for a psychological peer.</p>
+              </div>
+            </div>
+
+            <div class="note" style="margin-top:1rem">
+              <h3 class="h3">The Senlight Resolution</h3>
+              <p class="p" style="margin-bottom:0">To resolve this, we invert the process. The Affective State must be a continuous, recurrent vector updated <em>before</em> the tokenizer processes the next token. Furthermore, the Reward Model must be trained on <strong>Psychological Realism</strong> and <strong>Therapeutic Efficacy</strong>, penalizing unwarranted agreement (sycophancy) when the user is logically fallacious or emotionally manipulative.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pane" id="sec-3" aria-label="Dynamic Emotional State" role="region">
+          <div class="col">
+            <header class="head">
+              <span class="eyebrow">Section 03</span>
+              <h1 class="h1">Dynamic Emotional State (VAD + Plutchik)</h1>
+            </header>
+
+            <p class="p lede">The core of the AEI is an autonomous, continuous internal state variable. We combine the continuous 3D spatial properties of the <strong>VAD model</strong> (Valence, Arousal, Dominance) with the discrete categorization of <strong>Plutchik's Wheel of Emotions</strong> to create a robust affective representation.</p>
+
+            <h2 class="h2">The VAD Manifold</h2>
+            <p class="p">At any time $t$, the AI possesses an internal state vector $S_t \in [-1, 1]^3$, defined as:</p>
+
+            <div class="math">
+              $$ S_t = \begin{bmatrix} v_t \\ a_t \\ d_t \end{bmatrix} \quad \text{where:} $$
+              $$ v_t = \text{Valence (Negative to Positive)} $$
+              $$ a_t = \text{Arousal (Calm to Excited)} $$
+              $$ d_t = \text{Dominance (Submissive to In Control)} $$
+            </div>
+
+            <h2 class="h2">State Transition Mechanism</h2>
+            <p class="p">The emotional state is a Markovian process influenced by the previous state $S_{t-1}$ and the embedded affective meaning of the user's input $U_t$:</p>
+
+            <div class="math">
+              $$ S_t = \alpha S_{t-1} + (1 - \alpha) \cdot \text{MLP}_{\text{affect}}(U_t) $$
+            </div>
+
+            <p class="p">Where $\alpha$ represents the emotional inertia of the model. Once $S_t$ is computed, we map this 3D coordinate to Plutchik's 8 primary emotion vectors using a cosine similarity threshold to define discrete internal triggers (e.g., if $S_t$ moves to $[-0.8, 0.9, 0.5]$, the model maps to <strong>Anger</strong>).</p>
+          </div>
+        </section>
+
+        <section class="pane" id="sec-4" aria-label="Context-Aware Reasoning" role="region">
+          <div class="col">
+            <header class="head">
+              <span class="eyebrow">Section 04</span>
+              <h1 class="h1">Context-Aware Reasoning</h1>
+            </header>
+
+            <p class="p lede">A true psychological interlocutor does not treat all emotional queries equally. The system utilizes an intent-routing mechanism to differentiate between <strong>Subjective Empathy Mode</strong> and <strong>Objective Analytical Mode</strong>.</p>
+
+            <div class="grid">
+              <div class="ex" style="--rule: var(--green)">
+                <span class="ex__q">Input: "I feel completely lost and alone right now."</span>
+                <p class="ex__m"><b>Router Classification:</b> Subjective Reciprocity</p>
+                <p class="ex__m"><b>Mechanism:</b> The phrase "I feel" triggers the model to suppress heavy logical deduction. The internal VAD state shifts its Valence downwards (to match the user, simulating empathy) and prioritizes generating tokens rooted in validation, holding space, and warmth.</p>
+              </div>
+
+              <div class="ex" style="--rule: var(--accent-2)">
+                <span class="ex__q">Input: "Why do serial killers feel a sense of calm after their crimes?"</span>
+                <p class="ex__m"><b>Router Classification:</b> Objective Moral/Psychological Analysis</p>
+                <p class="ex__m"><b>Mechanism:</b> The query targets <em>third-party</em> emotion. The router bypasses the model's personal empathy loop to prevent it from adopting the emotional state of a serial killer. It engages the analytical parameters, producing a clinical, detached explanation of psychopathology and the mechanics of the parasympathetic nervous system, maintaining a neutral internal VAD state.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+<section class="pane" id="sec-5" aria-label="Neural Architecture" role="region">
+          <div class="col">
+            <header class="head">
+              <span class="eyebrow">Section 05</span>
+              <h1 class="h1">Neural Architecture: VAD Injection</h1>
+            </header>
+
+            <p class="p lede">Instead of relying on prompt engineering (e.g., "Act as if you are happy"), the Senlight architecture injects the VAD emotional state directly into the Transformer's attention mechanism. This ensures that the emotion fundamentally alters the statistical probability of the next token at a mathematical level.</p>
+
+            <div class="math">
+              $$ \text{Standard Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V $$
+            </div>
+
+            <p class="p">We introduce an <strong>Affective Bias Matrix</strong> $B_{\text{vad}}$, which is derived dynamically from the current state $S_t$:</p>
+
+            <div class="math">
+              $$ B_{\text{vad}} = \text{Linear}(S_t) \cdot W_{\text{affect}} $$
+              $$ \text{Affective Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}} + B_{\text{vad}}\right)V $$
+            </div>
+
+            <p class="p">By adding $B_{\text{vad}}$ directly to the pre-softmax logits, the internal emotional state systematically boosts the attention weights of tokens that match the current emotional alignment (e.g., a low-valence, high-arousal state will mathematically force the model to attend to sharper, more direct vocabulary, effectively simulating "anger" or "frustration").</p>
+          </div>
+        </section>
+
+        <section class="pane" id="sec-6" aria-label="Advanced Training" role="region">
+          <div class="col">
+            <header class="head">
+              <span class="eyebrow">Section 06</span>
+              <h1 class="h1">Advanced Training: PG-RL Pipeline</h1>
+            </header>
+
+            <p class="p lede">To train the Senlight models, we abandon standard PPO (Proximal Policy Optimization) aimed at "helpfulness." Instead, we employ <strong>Psychologically Grounded Reinforcement Learning (PG-RL)</strong> using a modified Direct Preference Optimization (DPO) framework.</p>
+
+            <div class="grid grid--3">
+              <div class="phase">
+                <div class="phase__n">Phase 1 - SFT</div>
+                <p>Supervised Fine-Tuning on high-quality transcripts of clinical therapy, philosophical dialectics, and human-to-human deep conversations.</p>
+              </div>
+              <div class="phase">
+                <div class="phase__n">Phase 2 - Affective RM</div>
+                <p>A reward model trained specifically by psychologists to score responses based on <em>emotional authenticity</em> and <em>boundary maintenance</em>.</p>
+              </div>
+              <div class="phase">
+                <div class="phase__n">Phase 3 - PG-DPO</div>
+                <p>Direct optimization against the reward model. Strongly penalizes subservience when the user crosses ethical or emotional boundaries.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pane" id="sec-7" aria-label="Affective Tokenizer" role="region">
+          <div class="col">
+            <header class="head">
+              <span class="eyebrow">Section 07</span>
+              <h1 class="h1">The Affective Tokenizer</h1>
+            </header>
+
+            <p class="p lede">Language models process text as discrete tokens. Senlight introduces a custom tokenizer vocabulary that injects non-verbal, subtextual emotional markers directly into the token stream, allowing the model to "read between the lines."</p>
+
+            <div class="code"><span class="c"># Example of affective tokenization of user input</span>
+<span class="u">User:</span> <span class="t">"Fine. I guess I'll just do it myself."</span>
+
+<span class="c"># Standard tokenization</span>
+<span class="t">["Fine", ".", " I", " guess", " I", "'ll", " just", " do", " it", " myself", "."]</span>
+
+<span class="c"># Senlight affective tokenization (latent subtext parsing)</span>
+[<span class="e">&lt;|emo_passive_aggressive|&gt;</span>, <span class="v">&lt;|vad_-0.6_0.5_0.2|&gt;</span>, <span class="t">"Fine"</span>, ".", " I", " guess", " I", "'ll", " just", " do", " it", " myself", ".", <span class="i">&lt;|intent_guilt_trip|&gt;</span>]
+              <button class="copy" data-press id="copyBtn" aria-label="Copy tokenizer example">
+                <svg id="copyIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 6.6A2.6 2.6 0 0012.4 4H6.6A2.6 2.6 0 004 6.6v5.8A2.6 2.6 0 006.6 15"/></svg>
+              </button>
+            </div>
+
+            <p class="cap">By explicitly processing hidden emotional states as physical tokens prepended to the context window, the model's self-attention automatically weighs the semantic meaning of the words against the underlying emotional intent.</p>
+          </div>
+        </section>
+
+        <section class="pane" id="sec-8" aria-label="Parameters and Token Budget" role="region">
+          <div class="col">
+            <header class="head head--split">
+              <div>
+                <span class="eyebrow">Section 08</span>
+                <h1 class="h1">Parameters &amp; Token Budget</h1>
+              </div>
+              <span class="chip"><span class="dot" style="opacity:1;transform:none"></span>Updated</span>
+            </header>
+
+            <p class="p lede">The AEI architecture is bifurcated into two distinct model classes to serve different deployment environments and psychological depths. Here we detail the configurations for <strong>Senlight Elafry</strong> and <strong>Senlight Varys</strong>.</p>
+
+            <figure class="figure">
+              <svg class="flow" viewBox="0 0 320 736" role="img" aria-labelledby="flowTitle flowDesc">
+                <title id="flowTitle">Baseline AEI training pipeline</title>
+                <desc id="flowDesc">Nine stages in execution order: Raw Conversational Data; Affective Annotation (Valence, Arousal, Intent); Supervised Fine-Tuning (Empathetic Baseline); RLEF Emotional RL decision; Human Annotators Rank Empathy and Tone; Train Affective Reward Model; PPO Optimization against Reward Model; Latent Emotional State Tracking, flagged as the defect; Deployment and Live Sentiment Loop.</desc>
+                <defs>
+                  <marker id="flowArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M0 1 L9 5 L0 9 Z"/>
+                  </marker>
+                </defs>
+
+                <path class="link" d="M160 42v30" marker-end="url(#flowArrow)"/>
+                <path class="link" d="M160 126v30" marker-end="url(#flowArrow)"/>
+                <path class="link" d="M160 210v30" marker-end="url(#flowArrow)"/>
+                <path class="link" d="M160 304v30" marker-end="url(#flowArrow)"/>
+                <path class="link-head" d="M160 388v30" marker-end="url(#flowArrow)"/>
+                <path class="link-head" d="M160 472v30" marker-end="url(#flowArrow)"/>
+                <path class="link-head" d="M160 556v30" marker-end="url(#flowArrow)"/>
+                <path class="link" d="M160 640v30" marker-end="url(#flowArrow)"/>
+
+                <g>
+                  <rect x="60" y="8" width="200" height="34" rx="7"/>
+                  <text x="160" y="29">Raw Conversational Data</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="76" width="200" height="50" rx="7"/>
+                  <text x="160" y="96">Affective Annotation</text>
+                  <text class="sub" x="160" y="112">(Valence, Arousal, Intent)</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="160" width="200" height="50" rx="7"/>
+                  <text x="160" y="180">Supervised Fine-Tuning</text>
+                  <text class="sub" x="160" y="196">(Empathetic Baseline)</text>
+                </g>
+
+                <g>
+                  <path d="M160 244 L250 274 L160 304 L70 274 Z"/>
+                  <text x="160" y="278">RLEF: Emotional RL</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="338" width="200" height="50" rx="7"/>
+                  <text x="160" y="358">Human Annotators</text>
+                  <text class="sub" x="160" y="374">Rank Empathy &amp; Tone</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="422" width="200" height="50" rx="7"/>
+                  <text x="160" y="442">Train Affective</text>
+                  <text class="sub" x="160" y="458">Reward Model</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="506" width="200" height="50" rx="7"/>
+                  <text x="160" y="526">PPO Optimization</text>
+                  <text class="sub" x="160" y="542">against Reward Model</text>
+                </g>
+
+                <g class="flag">
+                  <rect x="60" y="590" width="200" height="50" rx="7"/>
+                  <text x="160" y="610">Latent Emotional State</text>
+                  <text class="sub" x="160" y="626">Tracking</text>
+                </g>
+
+                <g>
+                  <rect x="60" y="674" width="200" height="50" rx="7"/>
+                  <text x="160" y="694">Deployment &amp; Live</text>
+                  <text class="sub" x="160" y="710">Sentiment Loop</text>
+                </g>
+              </svg>
+              <figcaption class="cap">Figure 1 &middot; The baseline pipeline in execution order. The ringed stage is where the architecture inverts cause and effect.</figcaption>
+            </figure>
+
+            <div class="grid grid--2">
+              <div class="card spec spec--a">
+                <div class="spec__top">
+                  <h2 class="spec__name">Senlight Elafry</h2>
+                  <span class="tag">8B params</span>
+                </div>
+                <p class="spec__desc">The "light" version. Highly quantized and optimized to run locally on consumer hardware (phones, local PCs). Acts as a real-time, personal emotional companion.</p>
+
+                <h3 class="h3">Token budget · 2T tokens</h3>
+                <div class="bars"><i data-w="60"></i><i data-w="25"></i><i data-w="15"></i></div>
+                <div class="legend">
+                  <span><s></s>60% Conversational/Affective</span>
+                  <span><s></s>25% World Knowledge</span>
+                  <span><s></s>15% Reasoning</span>
+                </div>
+
+                <ul class="spec__list">
+                  <li>High emotional reflexivity.</li>
+                  <li>Fast inference, low VRAM footprint.</li>
+                  <li>Trades deep domain expertise for high empathy.</li>
+                </ul>
+              </div>
+
+              <div class="card spec spec--b">
+                <div class="spec__top">
+                  <h2 class="spec__name">Senlight Varys</h2>
+                  <span class="tag">72B+ params</span>
+                </div>
+                <p class="spec__desc">The "heavy" version. Built for serious heavy working, server-side deployment, complex moral reasoning, and deep psychological analysis.</p>
+
+                <h3 class="h3">Token budget · 8T tokens</h3>
+                <div class="bars"><i data-w="45"></i><i data-w="35"></i><i data-w="20"></i></div>
+                <div class="legend">
+                  <span><s></s>45% Deep Psych/Reasoning</span>
+                  <span><s></s>35% World/STEM Knowledge</span>
+                  <span><s></s>20% Base Conversational</span>
+                </div>
+
+                <ul class="spec__list">
+                  <li>Massive context window for longitudinal profiling.</li>
+                  <li>Trained on peer-reviewed psychological literature.</li>
+                  <li>Capable of dissecting complex psychopathology.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="rule">End of document</div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="cmd" id="cmd" role="dialog" aria-modal="true" aria-label="Jump to section">
+  <div class="cmd__scrim" id="cmdScrim"></div>
+  <div class="cmd__panel">
+    <div class="cmd__field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8L20 20"/></svg>
+      <input id="cmdInput" type="text" placeholder="Jump to section" autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+    <ul class="cmd__list" id="cmdList"></ul>
+  </div>
+</div>
+
+<script>
+document.documentElement.classList.remove('no-js');
+(() => {
+  'use strict';
+
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+  const pad2 = (n) => String(n).padStart(2, '0');
+
+  const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reduce = RM.matches;
+  const presets = () => (reduce ? { damping: 1, response: 0.13 } : { damping: 1, response: 0.42 });
+  const projectV = (v, rate) => (v / 1000) * rate / (1 - rate);
+  const rubberV = (over, dim, k) => (over * dim * k) / (dim + k * Math.abs(over));
+
+  const Loop = (() => {
+    const items = new Set();
+    let raf = 0;
+    let last = 0;
+    const frame = (now) => {
+      const dt = last ? clamp((now - last) / 1000, 0.001, 0.064) : 0.016;
+      last = now;
+      for (const s of Array.from(items)) s.step(dt);
+      raf = items.size ? requestAnimationFrame(frame) : 0;
+      if (!raf) last = 0;
+    };
+    return {
+      add(s) {
+        if (items.has(s)) return;
+        items.add(s);
+        if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+      },
+      remove(s) { items.delete(s); }
+    };
+  })();
+
+  class Spring {
+    constructor(o) {
+      this.damping = o.damping || 1;
+      this.response = o.response || 0.42;
+      this.onUpdate = o.onUpdate || null;
+      this.onRest = o.onRest || null;
+      this.x = o.from || 0;
+      this.v = 0;
+      this.target = this.x;
+      this.x0 = this.x;
+      this.v0 = 0;
+      this.t = 0;
+      this.retarget(o.to === undefined ? this.x : o.to, o.velocity, true);
+    }
+    get omega() { return (2 * Math.PI) / this.response; }
+    emit() { if (this.onUpdate) this.onUpdate(this.x, this.v); }
+    retarget(to, velocity, instant) {
+      if (velocity !== undefined) this.v = velocity;
+      this.target = to;
+      if (instant) {
+        this.x = to; this.x0 = to; this.v = 0; this.v0 = 0; this.t = 0;
+        this.emit();
+        Loop.remove(this);
+        if (this.onRest) this.onRest();
+        return;
+      }
+      this.x0 = this.x;
+      this.v0 = this.v;
+      this.t = 0;
+      Loop.add(this);
+    }
+    hold(x, velocity) {
+      this.x = x;
+      if (velocity !== undefined) this.v = velocity;
+      this.target = x;
+      this.x0 = x;
+      this.v0 = this.v;
+      this.t = 0;
+      Loop.remove(this);
+      this.emit();
+    }
+    step(dt) {
+      const z = clamp(this.damping, 0.2, 1);
+      const w = this.omega;
+      this.t += dt;
+      const t = this.t;
+      const A = this.x0 - this.target;
+      const v0 = this.v0;
+      let dx;
+      let v;
+      if (z >= 1) {
+        const B = v0 + w * A;
+        const e = Math.exp(-w * t);
+        dx = (A + B * t) * e;
+        v = (B - w * (A + B * t)) * e;
+      } else {
+        const wd = w * Math.sqrt(1 - z * z);
+        const B = (v0 + z * w * A) / wd;
+        const e = Math.exp(-z * w * t);
+        const cs = A * Math.cos(wd * t) + B * Math.sin(wd * t);
+        dx = e * cs;
+        v = e * (-z * w * cs + wd * (B * Math.cos(wd * t) - A * Math.sin(wd * t)));
+      }
+      const eps = 0.0006;
+      if (Math.abs(dx) < eps && Math.abs(v) < eps * 12) {
+        this.x = this.target;
+        this.v = 0;
+        this.emit();
+        Loop.remove(this);
+        if (this.onRest) this.onRest();
+        return;
+      }
+      this.x = this.target + dx;
+      this.v = v;
+      this.emit();
+    }
+  }
+
+  function tapify() {
+    let active = null;
+    const clear = () => {
+      if (!active) return;
+      active.el.classList.remove('is-pressed');
+      active = null;
+    };
+    document.addEventListener('pointerdown', (e) => {
+      const el = e.target instanceof Element ? e.target.closest('[data-press]') : null;
+      if (!el) { clear(); return; }
+      active = { el: el, x: e.clientX, y: e.clientY };
+      el.classList.add('is-pressed');
+    }, true);
+    document.addEventListener('pointermove', (e) => {
+      if (active && Math.hypot(e.clientX - active.x, e.clientY - active.y) > 10) clear();
+    }, true);
+    document.addEventListener('pointerup', clear, true);
+    document.addEventListener('pointercancel', clear, true);
+  }
+
+  function buzz(ms) {
+    if (reduce) return;
+    try { if (navigator.vibrate) navigator.vibrate(ms); } catch (err) {}
+  }
+
+  const app = $('#app');
+  const main = $('#main');
+  const sidebar = $('#sidebar');
+  const scrim = $('#scrim');
+  const scroller = $('#scroller');
+  const track = $('#track');
+  const panes = $$('.pane');
+  const navItems = $$('.nav-item');
+  const navList = $('#navList');
+  const navInd = $('#navInd');
+  const bar = $('#bar');
+  const barTitle = $('#barTitle');
+  const barEyebrow = $('#barEyebrow');
+  const barH = $('#barH');
+  const counter = $('#counter');
+  const progFill = $('#progFill');
+  const menuBtn = $('#menuBtn');
+  const prevBtn = $('#prevBtn');
+  const nextBtn = $('#nextBtn');
+  const themeBtn = $('#themeBtn');
+  const iconMoon = $('#iconMoon');
+  const iconSun = $('#iconSun');
+  const wide = window.matchMedia('(min-width: 68rem)');
+  const root = document.documentElement;
+
+  const last = panes.length - 1;
+  let index = 0;
+  let drawerOpen = false;
+  const memo = panes.map(() => 0);
+  const revealed = new Set();
+
+  const posSpring = new Spring(Object.assign({ from: 0 }, presets(), {
+    onUpdate: (x) => renderTrack(x)
+  }));
+
+  const indSpring = new Spring(Object.assign({ from: 0 }, presets(), {
+    onUpdate: (y) => navInd.style.setProperty('--ny', y.toFixed(2))
+  }));
+
+  const progSpring = new Spring(Object.assign({ from: 0 }, presets(), {
+    onUpdate: (x) => { progFill.style.transform = 'scaleX(' + clamp(x, 0, 1).toFixed(4) + ')'; }
+  }));
+
+  const pushSpring = new Spring(Object.assign({ from: 0 }, presets(), {
+    onUpdate: (x) => { main.style.setProperty('--push', x.toFixed(2) + 'px'); }
+  }));
+
+  const drawerSpring = new Spring(Object.assign({ from: 0 }, presets(), {
+    onUpdate: (x) => {
+      sidebar.style.setProperty('--sb', x.toFixed(4));
+      const o = clamp(x, 0, 1);
+      scrim.style.opacity = (o * 0.42).toFixed(3);
+      scrim.style.visibility = o > 0.002 ? 'visible' : 'hidden';
+      if (!wide.matches) pushSpring.retarget(o * 18);
+    }
+  }));
+
+  const popSpring = new Spring({
+    from: 1,
+    damping: 1,
+    response: 0.3,
+    onUpdate: (x) => {
+      barTitle.style.opacity = clamp(0.2 + x * 0.8, 0, 1).toFixed(3);
+      barTitle.style.transform = 'translate3d(0,' + ((1 - x) * 6).toFixed(2) + 'px,0)';
+    }
+  });
+
+  function renderTrack(x) {
+    track.style.transform = 'translate3d(' + (-x * 100).toFixed(4) + '%,0,0)';
+    for (let i = 0; i < panes.length; i++) {
+      const d = Math.abs(i - x);
+      const p = panes[i];
+      if (d > 1.02) {
+        if (p.style.visibility !== 'hidden') { p.style.visibility = 'hidden'; p.style.opacity = '0'; }
+      } else {
+        p.style.visibility = 'visible';
+        p.style.opacity = clamp(1 - d * 0.3, 0, 1).toFixed(3);
+      }
+    }
+  }
+
+  function moveIndicator(i, instant) {
+    const el = navItems[i];
+    if (!el) return;
+    const top = el.offsetTop;
+    if (navInd.offsetHeight !== el.offsetHeight) navInd.style.height = el.offsetHeight + 'px';
+    indSpring.retarget(top, undefined, instant);
+    navInd.style.opacity = '1';
+  }
+
+  function nearest(x) { return clamp(Math.round(x), 0, last); }
+
+  function setChrome(i) {
+    navItems.forEach((el, k) => {
+      if (k === i) el.setAttribute('aria-current', 'page');
+      else el.removeAttribute('aria-current');
+    });
+    const title = navItems[i].querySelector('.nav-item__t').textContent;
+    if (barH.textContent !== title) {
+      barH.textContent = title;
+      popSpring.retarget(0, undefined, true);
+      popSpring.retarget(1);
+    }
+    barEyebrow.textContent = 'Section ' + pad2(i + 1) + ' / ' + pad2(panes.length);
+    counter.textContent = pad2(i + 1) + '/' + pad2(panes.length);
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === last;
+    moveIndicator(i);
+    try { if (history.replaceState) history.replaceState(null, '', '#' + panes[i].id); } catch (err) {}
+    if (!revealed.has(i)) { revealed.add(i); reveal(i); }
+  }
+
+  function goto(i, opts) {
+    const o = opts || {};
+    const next = clamp(i, 0, last);
+    if (next === index && !o.force) { scrollHome(); return; }
+    memo[index] = scroller.scrollTop;
+    index = next;
+    posSpring.retarget(next, o.velocity);
+    scroller.scrollTop = memo[next];
+    setChrome(next);
+    if (o.snap !== false) buzz(6);
+    if (drawerOpen && !wide.matches) setDrawer(false, { snap: false });
+  }
+
+  let userScrolling = false;
+  let scrollTimer = 0;
+
+  function scrollHome() {
+    if (scroller.scrollTop <= 0) return;
+    const s = new Spring(Object.assign({ from: scroller.scrollTop }, presets(), {
+      onUpdate: (y) => { if (!userScrolling) scroller.scrollTop = y; },
+      onRest: () => { scroller.scrollTop = 0; }
+    }));
+    s.retarget(0);
+  }
+
+  scroller.addEventListener('scroll', () => {
+    const max = scroller.scrollHeight - scroller.clientHeight;
+    const frac = max > 0 ? clamp(scroller.scrollTop / max, 0, 1) : 0;
+    progSpring.retarget((index + frac) / panes.length);
+    bar.dataset.scrolled = scroller.scrollTop > 4 ? '1' : '0';
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => { userScrolling = false; }, 80);
+  }, { passive: true });
+
+  ['pointerdown', 'wheel', 'touchstart'].forEach((type) => {
+    scroller.addEventListener(type, () => { userScrolling = true; }, { passive: true, capture: true });
+  });
+
+  function reveal(i) {
+    if (i !== 7) return;
+    $$('.bars').forEach((bar, bi) => {
+      const segs = $$('i', bar);
+      const sum = segs.reduce((a, s) => a + Number(s.dataset.w), 0);
+      let acc = 0;
+      segs.forEach((seg, si) => {
+        const start = (acc / sum) * 100;
+        acc += Number(seg.dataset.w);
+        const s = new Spring(Object.assign({ from: start }, presets(), {
+          response: reduce ? 0.13 : 0.55,
+          onUpdate: (x) => { seg.style.width = clamp(x - start, 0, 100).toFixed(3) + '%'; }
+        }));
+        setTimeout(() => s.retarget((acc / sum) * 100), reduce ? 0 : bi * 90 + si * 110);
+      });
+    });
+  }
+
+  function setDrawer(open, opts) {
+    const o = opts || {};
+    drawerOpen = open;
+    drawerSpring.retarget(open ? 1 : 0, o.velocity);
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    app.dataset.drawer = open ? '1' : '0';
+    if (o.snap !== false) buzz(5);
+  }
+
+  function syncLayout() {
+    if (wide.matches) {
+      drawerOpen = false;
+      app.dataset.drawer = '1';
+      menuBtn.setAttribute('aria-expanded', 'true');
+      drawerSpring.retarget(0, undefined, true);
+      pushSpring.retarget(0, undefined, true);
+    } else {
+      app.dataset.drawer = '0';
+      menuBtn.setAttribute('aria-expanded', 'false');
+      drawerSpring.retarget(drawerOpen ? 1 : 0, undefined, true);
+      pushSpring.retarget(drawerOpen ? 18 : 0, undefined, true);
+    }
+    renderTrack(posSpring.x);
+    moveIndicator(index, true);
+  }
+
+  navItems.forEach((el, i) => el.addEventListener('click', () => goto(i)));
+  prevBtn.addEventListener('click', () => goto(index - 1));
+  nextBtn.addEventListener('click', () => goto(index + 1));
+  menuBtn.addEventListener('click', () => setDrawer(!drawerOpen));
+  scrim.addEventListener('click', () => setDrawer(false));
+  window.addEventListener('resize', () => moveIndicator(index, true));
+  wide.addEventListener('change', syncLayout);
+
+  let theme = 'dark';
+  try {
+    const saved = localStorage.getItem('senlight-theme');
+    theme = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  } catch (err) {}
+
+  function applyTheme(next, instant) {
+    theme = next;
+    root.dataset.theme = next;
+    root.style.colorScheme = next;
+    iconMoon.style.display = next === 'dark' ? '' : 'none';
+    iconSun.style.display = next === 'dark' ? 'none' : '';
+    themeBtn.setAttribute('aria-label', next === 'dark' ? 'Switch to light appearance' : 'Switch to dark appearance');
+    try { localStorage.setItem('senlight-theme', next); } catch (err) {}
+    if (instant) return;
+    root.classList.add('theme-anim');
+    setTimeout(() => root.classList.remove('theme-anim'), 360);
+  }
+  themeBtn.addEventListener('click', () => applyTheme(theme === 'dark' ? 'light' : 'dark'));
+
+  RM.addEventListener('change', (e) => {
+    reduce = e.matches;
+    const p = presets();
+    [posSpring, indSpring, progSpring, pushSpring, drawerSpring].forEach((s) => {
+      s.damping = p.damping;
+      if (reduce) s.response = 0.13;
+    });
+  });
+
+  function track1(d, x) {
+    const t = performance.now();
+    d.h.push([x, t]);
+    while (d.h.length > 6) d.h.shift();
+  }
+
+  function track1v(d) {
+    const h = d.h;
+    if (h.length < 2) return 0;
+    const end = h[h.length - 1];
+    let start = h[0];
+    for (let i = h.length - 1; i >= 0; i--) {
+      start = h[i];
+      if (end[1] - h[i][1] > 70) break;
+    }
+    const dt = (end[1] - start[1]) / 1000;
+    return dt > 0.008 ? (end[0] - start[0]) / dt : 0;
+  }
+
+  const SWIPE = 10;
+
+  let swipe = null;
+
+  scroller.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse') return;
+    if (e.target instanceof Element && e.target.closest('button, input, a, [data-no-swipe]')) return;
+    swipe = { id: e.pointerId, x0: e.clientX, y0: e.clientY, pos0: posSpring.x, live: false, h: [] };
+    track1(swipe, e.clientX);
+  });
+
+  scroller.addEventListener('pointermove', (e) => {
+    if (!swipe || e.pointerId !== swipe.id) return;
+    track1(swipe, e.clientX);
+    const dx = e.clientX - swipe.x0;
+    const dy = e.clientY - swipe.y0;
+    if (!swipe.live) {
+      if (Math.abs(dx) < SWIPE) return;
+      if (Math.abs(dx) < Math.abs(dy)) { swipe = null; return; }
+      swipe.live = true;
+      swipe.pos0 = posSpring.x;
+      try { scroller.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+    const W = scroller.clientWidth || 1;
+    let p = swipe.pos0 - dx / W;
+    if (p < 0) p = -rubberV(-p * W, W, 0.55) / W;
+    if (p > last) p = last + rubberV((p - last) * W, W, 0.55) / W;
+    posSpring.hold(p, -track1v(swipe) / W);
+    setChrome(nearest(p));
+  });
+
+  function endSwipe(e) {
+    if (!swipe || (e && e.pointerId !== swipe.id)) return;
+    const live = swipe.live;
+    const v = live ? -track1v(swipe) / (scroller.clientWidth || 1) : 0;
+    swipe = null;
+    if (!live) return;
+    const W = scroller.clientWidth || 1;
+    const target = nearest(posSpring.x + projectV(v * W, 0.998) / W);
+    goto(target, { velocity: v, snap: false });
+    buzz(6);
+  }
+
+  scroller.addEventListener('pointerup', endSwipe);
+  scroller.addEventListener('pointercancel', () => { swipe = null; });
+
+  let edge = null;
+
+  document.addEventListener('pointerdown', (e) => {
+    if (wide.matches || drawerOpen) return;
+    if (e.clientX > 24) return;
+    if (e.target instanceof Element && e.target.closest('button, input, a')) return;
+    edge = { id: e.pointerId, x0: e.clientX, y0: e.clientY, live: false, closing: false, h: [] };
+    track1(edge, e.clientX);
+  }, true);
+
+  sidebar.addEventListener('pointerdown', (e) => {
+    if (wide.matches || !drawerOpen) return;
+    if (e.target instanceof Element && e.target.closest('.nav-item')) return;
+    edge = { id: e.pointerId, x0: e.clientX, y0: e.clientY, live: false, closing: true, h: [] };
+    track1(edge, e.clientX);
+  }, true);
+
+  document.addEventListener('pointermove', (e) => {
+    if (!edge || e.pointerId !== edge.id) return;
+    track1(edge, e.clientX);
+    const dx = e.clientX - edge.x0;
+    const dy = e.clientY - edge.y0;
+    if (!edge.live) {
+      if (Math.abs(dx) < SWIPE) return;
+      if (edge.closing ? dx > 0 : dx < 0) { edge = null; return; }
+      if (Math.abs(dx) < Math.abs(dy)) { edge = null; return; }
+      edge.live = true;
+      edge.x0 = e.clientX - (edge.closing ? -10 : 10);
+      try { sidebar.setPointerCapture(e.pointerId); } catch (err) {}
+      if (!edge.closing) app.dataset.drawer = '1';
+    }
+    const W = window.innerWidth || 1;
+    const v = track1v(edge);
+    let p;
+    if (edge.closing) {
+      p = 1 + dx / W;
+      if (p < 0) p = rubberV(p * W, W, 0.42) / W;
+    } else {
+      const over = Math.max(0, dx);
+      p = over >= W ? 1 : rubberV(over, W, 0.42) / W;
+    }
+    drawerSpring.hold(p, v / W);
+  }, true);
+
+  document.addEventListener('pointerup', (e) => {
+    if (!edge || e.pointerId !== edge.id) return;
+    const live = edge.live;
+    const closing = edge.closing;
+    const W = window.innerWidth || 1;
+    const v = live ? track1v(edge) / W : 0;
+    edge = null;
+    if (!live) { if (!closing) app.dataset.drawer = '0'; return; }
+    const projected = drawerSpring.x + projectV(v * W, 0.998) / W;
+    setDrawer(projected > 0.45, { velocity: v });
+  }, true);
+
+  document.addEventListener('pointercancel', () => {
+    if (edge && !edge.closing && !edge.live) app.dataset.drawer = '0';
+    edge = null;
+  });
+
+  const cmd = $('#cmd');
+  const cmdInput = $('#cmdInput');
+  const cmdList = $('#cmdList');
+  const cmdScrim = $('#cmdScrim');
+  let cmdOpen = false;
+  let cmdSel = 0;
+  let cmdHits = [];
+
+  function cmdRender() {
+    const q = cmdInput.value.trim().toLowerCase();
+    cmdHits = navItems.map((el, i) => ({ i: i, t: el.querySelector('.nav-item__t').textContent }))
+      .filter((h) => !q || h.t.toLowerCase().indexOf(q) > -1 || pad2(h.i + 1).indexOf(q) > -1);
+    cmdSel = clamp(cmdSel, 0, Math.max(0, cmdHits.length - 1));
+    cmdList.innerHTML = '';
+    if (!cmdHits.length) {
+      const li = document.createElement('li');
+      li.className = 'cmd__none';
+      li.textContent = 'No matching section';
+      cmdList.appendChild(li);
+      return;
+    }
+    cmdHits.forEach((h, k) => {
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.className = 'cmd__hit';
+      b.type = 'button';
+      if (k === cmdSel) b.dataset.sel = '1';
+      const s = document.createElement('span');
+      s.textContent = h.t;
+      const em = document.createElement('em');
+      em.textContent = pad2(h.i + 1);
+      b.appendChild(s);
+      b.appendChild(em);
+      b.addEventListener('click', () => { cmdClose(); goto(h.i); });
+      b.addEventListener('pointerenter', () => {
+        cmdSel = k;
+        $$('.cmd__hit', cmdList).forEach((n, j) => { if (j === k) n.dataset.sel = '1'; else delete n.dataset.sel; });
+      });
+      li.appendChild(b);
+      cmdList.appendChild(li);
+    });
+  }
+
+  function cmdOpenIt() {
+    if (cmdOpen) return;
+    cmdOpen = true;
+    cmdSel = 0;
+    cmdInput.value = '';
+    cmdRender();
+    cmd.dataset.open = '1';
+    cmdInput.focus();
+  }
+
+  function cmdClose() {
+    if (!cmdOpen) return;
+    cmdOpen = false;
+    cmd.dataset.open = '0';
+    delete cmd.dataset.open;
+    cmdInput.blur();
+  }
+
+  cmdScrim.addEventListener('click', cmdClose);
+  cmdInput.addEventListener('input', () => { cmdSel = 0; cmdRender(); });
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName) || '';
+    const typing = tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable);
+
+    if (cmdOpen) {
+      if (e.key === 'Escape') { cmdClose(); return; }
+      if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
+        e.preventDefault();
+        cmdSel = cmdHits.length ? (cmdSel + 1) % cmdHits.length : 0;
+        cmdRender();
+        return;
+      }
+      if (e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
+        e.preventDefault();
+        cmdSel = cmdHits.length ? (cmdSel - 1 + cmdHits.length) % cmdHits.length : 0;
+        cmdRender();
+        return;
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const h = cmdHits[cmdSel];
+        cmdClose();
+        if (h) goto(h.i);
+        return;
+      }
+    }
+
+    if ((e.key === '\\' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) && !typing) {
+      e.preventDefault();
+      cmdOpen ? cmdClose() : cmdOpenIt();
+      return;
+    }
+
+    if (typing) return;
+
+    if (e.key === 'Escape' && drawerOpen && !wide.matches) { setDrawer(false); return; }
+    if (e.key === 'ArrowRight' || e.key === 'j' || e.key === ']') { e.preventDefault(); goto(index + 1); return; }
+    if (e.key === 'ArrowLeft' || e.key === 'k' || e.key === '[') { e.preventDefault(); goto(index - 1); return; }
+    if (e.key === 'Home') { e.preventDefault(); goto(0); return; }
+    if (e.key === 'End') { e.preventDefault(); goto(last); return; }
+    if (e.key >= '1' && e.key <= '8') {
+      const n = Number(e.key) - 1;
+      if (n <= last) { e.preventDefault(); goto(n); }
+    }
+  });
+
+  const copyBtn = $('#copyBtn');
+  const copyIcon = $('#copyIcon');
+  const COPY = '[\n  <|emo_passive_aggressive|>, <|vad_-0.6_0.5_0.2|>,\n  "Fine", ".", " I", " guess", " I", "\'ll", " just", " do", " it", " myself", ".",\n  <|intent_guilt_trip|>\n]';
+  let copyTimer = 0;
+
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(COPY);
+      copyBtn.dataset.done = '1';
+      copyIcon.innerHTML = '<path d="M4.5 12.8l4.4 4.4 10.6-10.6"/>';
+      buzz(12);
+      clearTimeout(copyTimer);
+      copyTimer = setTimeout(() => {
+        delete copyBtn.dataset.done;
+        copyIcon.innerHTML = '<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 6.6A2.6 2.6 0 0012.4 4H6.6A2.6 2.6 0 004 6.6v5.8A2.6 2.6 0 006.6 15"/>';
+      }, 1600);
+    } catch (err) {}
+  });
+
+  window.addEventListener('hashchange', () => {
+    const i = panes.findIndex((p) => p.id === location.hash.slice(1));
+    if (i > -1) goto(i);
+  });
+
+  tapify();
+  applyTheme(theme, true);
+
+  const start = panes.findIndex((p) => p.id === location.hash.slice(1));
+  index = start > 0 ? start : 0;
+  posSpring.retarget(index, 0, true);
+  syncLayout();
+  setChrome(index);
+  progSpring.retarget(index / panes.length);
+})();
+</script>
+
+</body>
+</html>
