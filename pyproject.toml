@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "elafry"
+version = "0.1.0"
+description = "Senlight Elafry: Artificial Emotional Intelligence as a psychological interlocutor"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "louiml" }]
+dependencies = [
+    "torch>=2.5.1",
+    "tokenizers>=0.20",
+    "numpy>=1.24",
+    "safetensors>=0.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[tool.setuptools.packages.find]
+include = ["elafry*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]

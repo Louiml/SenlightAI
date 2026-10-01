@@ -1,0 +1,21 @@
+[package]
+name = "elafry_rs"
+version = "0.1.0"
+edition = "2021"
+description = "Fast inference for Senlight Elafry, with affective state injection"
+license = "MIT"
+
+[dependencies]
+candle-core = "0.9"
+candle-nn = "0.9"
+tokenizers = "0.21"
+safetensors = "0.6"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+rand = "0.8"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
